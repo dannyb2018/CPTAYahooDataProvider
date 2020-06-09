@@ -19,18 +19,22 @@ limitations under the License.
 */
 package com.cloudpta.quantpipeline.backend.data_provider.yahoo.processors.CPTAYahooDataProviderProcessor.request_response.requests;
 
+import com.cloudpta.quantpipeline.api.instrument.symbology.CPTAInstrumentDatabaseConstants;
 import com.cloudpta.quantpipeline.backend.data_provider.processor.CPTADataProviderAPIConstants;
-import com.cloudpta.quantpipeline.backend.data_provider.request_response.CPTADataFieldValue;
 import com.cloudpta.quantpipeline.backend.data_provider.request_response.CPTADataProperty;
 import com.cloudpta.quantpipeline.backend.data_provider.yahoo.processors.CPTAYahooDataProviderProcessor.request_response.CPTAYahooConstants;
 import com.cloudpta.quantpipeline.backend.data_provider.yahoo.processors.CPTAYahooDataProviderProcessor.request_response.CPTAYahooMessage;
 import com.cloudpta.utilites.exceptions.CPTAException;
-import java.util.ArrayList;
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.List;
 import javax.json.Json;
 import javax.json.JsonArray;
 import javax.json.JsonArrayBuilder;
 import javax.json.JsonObject;
+import javax.json.JsonObjectBuilder;
 
 /**
  *
@@ -77,166 +81,120 @@ public class CPTAYahooEODMessage extends CPTAYahooMessage
                 "error":null}}        
         */
 
-        JsonArrayBuilder result = Json.createArrayBuilder();
-                
-        List<String> incomingFieldMap = new ArrayList<>();
-        List<CPTADataFieldValue> valuesForThisBlock = new ArrayList<>();
-        
-        String todaysDate = "";
+        JsonArrayBuilder resultBuilder = Json.createArrayBuilder();
+                        
         JsonObject meta = data.getJsonObject("meta");
-        // If exchange is one of the requested fields
-        if( true == fields.contains("exchangeName"))
-        {
-            // Get exchange            
-            String exchange = meta.getString("exchangeName");
-            // Add exchange value
-            CPTADataFieldValue exchangeNameValue = new CPTADataFieldValue();
-            exchangeNameValue.name = "exchangeName";
-            exchangeNameValue.value = exchange;
-            exchangeNameValue.date = todaysDate;
-        }
-        // If instrumentType is one of the requested fields
-        if( true == fields.contains("instrumentType"))
-        {
-            // Get instrumentType            
-            String instrumentType = meta.getString("instrumentType");
-            // Add instrument type
-            CPTADataFieldValue exchangeNameValue = new CPTADataFieldValue();
-            exchangeNameValue.name = "instrumentType";
-            exchangeNameValue.value = instrumentType;
-            exchangeNameValue.date = todaysDate;
-        }
-        
-        // If there are any fields in first block
-        if( 0 != valuesForThisBlock.size())
-        {
-            // We always want instrumentID
-            CPTADataFieldValue instrumentIDField = new CPTADataFieldValue();
-            instrumentIDField.setName(CPTAInstrumentAPIConstants);
-            instrumentIDField.setValue(symbology.getID());
-            valuesForThisBlock.add(instrumentIDField);
-            // and id source which is always ticker
-            CPTADataFieldValue instrumentIDSourceField = new CPTADataFieldValue();
-            instrumentIDSourceField.setName(CPTAInstrumentDatabaseConstants.INSTRUMENT_ID_SOURCE_FIELD_NAME);
-            instrumentIDSourceField.setValue("Ticker");
-            valuesForThisBlock.add(instrumentIDSourceField);
-            
-            // Create a block
-            CPTADataFieldValueBlock block = new CPTADataFieldValueBlockImpl();
-            block.setFields(valuesForThisBlock);
-            // Add it to list
-            result.add(block);
-            // clear values for this block
-            valuesForThisBlock.clear();
-        }
-        
-        String timezone = meta.get("timezone").asString();
-
+        // Get the exchange
+        String exchange = meta.getString(CPTAYahooConstants.EXCHANGE_CODE);
+        // Get currency
+        String currency = meta.getString(CPTAYahooConstants.CURRENCY);
+        // Get instrument ticker
+        String symbol = meta.getString(CPTAYahooConstants.SYMBOL);
+        // Get timezone
+        String timezone = meta.getString("timezone");
         
         // Get timestamps
-        JsonArray timestamps = data.get("timestamp").asArray();
+        JsonArray timestamps = data.getJsonArray(CPTAYahooConstants.TIMESTAMP);
         System.out.println(timestamps.toString());
 
         // Get quote
-        data = data.get("indicators").asObject();
-        JsonArray quoteAsArrayOfOneObject = data.get("quote").asArray();
-        JsonObject quote = quoteAsArrayOfOneObject.get(0).asObject();
+        data = data.getJsonObject("indicators");
+        JsonArray quoteAsArrayOfOneObject = data.getJsonArray("quote");
+        JsonObject quote = quoteAsArrayOfOneObject.getJsonObject(0);
         // Get volumes, opens, closes, highs, lows, 
-        JsonArray volumes = quote.get("volume").asArray();
-        JsonArray opens = quote.get("open").asArray();
-        JsonArray closes = quote.get("close").asArray();
-        JsonArray highs = quote.get("high").asArray();
-        JsonArray lows = quote.get("low").asArray();
+        JsonArray volumes = quote.getJsonArray(CPTAYahooConstants.VOLUME);
+        JsonArray opens = quote.getJsonArray(CPTAYahooConstants.OPEN);
+        JsonArray closes = quote.getJsonArray(CPTAYahooConstants.CLOSE);
+        JsonArray highs = quote.getJsonArray(CPTAYahooConstants.HIGH);
+        JsonArray lows = quote.getJsonArray(CPTAYahooConstants.LOW);
 
         // BUGBUGDB try to be a bit cleverer about checking which fields we want
         // Loop through each timestamp
         int numberOfDatapoints = timestamps.size();
         for( int i = 0; i < numberOfDatapoints; i++ )
         {
+            JsonObjectBuilder datapointForThisTime = Json.createObjectBuilder();
+            // Firstly add symbol and that it is ticker
+            datapointForThisTime.add(CPTAInstrumentDatabaseConstants.INSTRUMENT_ID_FIELD_NAME, symbol);
+            datapointForThisTime.add(CPTAInstrumentDatabaseConstants.INSTRUMENT_ID_SOURCE_FIELD_NAME, CPTAInstrumentDatabaseConstants.ID_SOURCE_TICKER);
+            
+            // If we want exchange
+            if( true == fields.contains(CPTAYahooConstants.EXCHANGE_CODE))
+            {
+                datapointForThisTime.add(CPTAYahooConstants.EXCHANGE_CODE, exchange);
+            }
+            
+            // If we want currency
+            if( true == fields.contains(CPTAYahooConstants.CURRENCY))
+            {
+                datapointForThisTime.add(CPTAYahooConstants.CURRENCY, currency);                
+            }
+            
             // If we want trade timestamp
-            if( true == fields.contains("timestamp"))
+            if( true == fields.contains(CPTAYahooConstants.TIMESTAMP))
             {
-                String value = getDateFromYahooDate(timestamps.get(i).asLong(), timezone);
-                incomingFieldMap.set(1, "timestamp");
-                // make the first block
-                String CPTAField = mapper.getIncomingMapping(incomingFieldMap);
-                CPTADataFieldValue field = new CPTADataFieldValueImpl();
-                field.setName(CPTAField);
-                field.setValue(value);
-                valuesForThisBlock.add(field);                
+                String value = getDateFromYahooDate((long)timestamps.getInt(i), timezone);
+                // Add to datapoint
+                datapointForThisTime.add(CPTAYahooConstants.TIMESTAMP, value);
             }
+            
             // If we want close
-            if( true == fields.contains("close"))
+            if( true == fields.contains(CPTAYahooConstants.CLOSE))
             {
-                String value = closes.get(i).toString();
-                incomingFieldMap.set(1, "close");
-                // make the first block
-                String CPTAField = mapper.getIncomingMapping(incomingFieldMap);
-                CPTADataFieldValue field = new CPTADataFieldValueImpl();
-                field.setName(CPTAField);
-                field.setValue(value);
-                valuesForThisBlock.add(field);                
+                String value = closes.getString(i);
+                // Add to datapoint
+                datapointForThisTime.add(CPTAYahooConstants.CLOSE, value);
             }
+            
             // If we want open
-            if( true == fields.contains("open"))
+            if( true == fields.contains(CPTAYahooConstants.OPEN))
             {
-                String value = opens.get(i).toString();
-                incomingFieldMap.set(1, "open");
-                // make the first block
-                String CPTAField = mapper.getIncomingMapping(incomingFieldMap);
-                CPTADataFieldValue field = new CPTADataFieldValueImpl();
-                field.setName(CPTAField);
-                field.setValue(value);
-                valuesForThisBlock.add(field);                
+                String value = opens.getString(i);
+                // Add to datapoint
+                datapointForThisTime.add(CPTAYahooConstants.OPEN, value);
             }
+            
             // If we want high
-            if( true == fields.contains("high"))
+            if( true == fields.contains(CPTAYahooConstants.HIGH))
             {
-                String value = highs.get(i).toString();
-                incomingFieldMap.set(1, "high");
-                // make the first block
-                String CPTAField = mapper.getIncomingMapping(incomingFieldMap);
-                CPTADataFieldValue field = new CPTADataFieldValueImpl();
-                field.setName(CPTAField);
-                field.setValue(value);
-                valuesForThisBlock.add(field);                
+                String value = highs.getString(i);
+                // Add to datapoint
+                datapointForThisTime.add(CPTAYahooConstants.HIGH, value);
             }
+            
             // If we want low
-            if( true == fields.contains("low"))
+            if( true == fields.contains(CPTAYahooConstants.LOW))
             {
-                String value = lows.get(i).toString();
-                incomingFieldMap.set(1, "low");
-                // make the first block
-                String CPTAField = mapper.getIncomingMapping(incomingFieldMap);
-                CPTADataFieldValue field = new CPTADataFieldValueImpl();
-                field.setName(CPTAField);
-                field.setValue(value);
-                valuesForThisBlock.add(field);                
+                String value = lows.getString(i);
+                // Add to datapoint
+                datapointForThisTime.add(CPTAYahooConstants.LOW, value);
             }
+            
             // If we want volume
-            if( true == fields.contains("volume"))
+            if( true == fields.contains(CPTAYahooConstants.VOLUME))
             {
-                String value = volumes.get(i).toString();
-                incomingFieldMap.set(1, "volume");
-                // make the first block
-                String CPTAField = mapper.getIncomingMapping(incomingFieldMap);
-                CPTADataFieldValue field = new CPTADataFieldValueImpl();
-                field.setName(CPTAField);
-                field.setValue(value);
-                valuesForThisBlock.add(field);                
+                String value = volumes.getString(i);
+                // Add to datapoint
+                datapointForThisTime.add(CPTAYahooConstants.VOLUME, value);
             }            
             
-            // Create a block
-            CPTADataFieldValueBlock block = new CPTADataFieldValueBlockImpl();
-            block.setFields(valuesForThisBlock);
-            // Add it to list
-            result.add(block);
-            // clear values for this block
-            valuesForThisBlock.clear();
+            // add to result
+            resultBuilder.add(datapointForThisTime);
         }        
 
+        // Build the array and return it
+        JsonArray result = resultBuilder.build();
         return result;
     }    
+    
+    protected String getDateFromYahooDate(long yahooDateTime, String timezone)
+    {
+        // Convert milliseconds to String
+        ZonedDateTime zonedDatetime = ZonedDateTime.ofInstant(Instant.ofEpochMilli(yahooDateTime), ZoneId.of(timezone));
+        LocalDateTime datetime = zonedDatetime.toLocalDateTime();
+        String datetimeAsString = datetime.toString();
+        return datetimeAsString;
+    }
     
     protected void processProperties(List<CPTADataProperty> properties)
     {
