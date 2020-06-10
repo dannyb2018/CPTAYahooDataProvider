@@ -43,12 +43,6 @@ public class CPTAYahooAnalysisMessage extends CPTAYahooMessage
     }
 
     @Override
-    protected String getURL()
-    {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
     protected JsonArray parseResult(JsonObject data) throws CPTAException
     {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
@@ -56,6 +50,12 @@ public class CPTAYahooAnalysisMessage extends CPTAYahooMessage
 
     @Override
     public JsonArray getResult(ComponentLog logger, ProcessContext context, List<CPTAInstrumentSymbology> symbols, List<String> fields, List<CPTADataProperty> properties) throws CPTAException
+    {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    protected String getURL(String symbol)
     {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
