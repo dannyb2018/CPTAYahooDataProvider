@@ -44,9 +44,9 @@ public class CPTAYahooOptionChainMessage extends CPTAYahooMessage
     }
 
     @Override
-    protected String getURL()
+    protected String getURL(String symbol)
     {
         String urlHost = "https://query2.finance.yahoo.com/v7/finance/options/"+ symbology.getID();        
         return urlHost;
-    }    
+    }
 }
