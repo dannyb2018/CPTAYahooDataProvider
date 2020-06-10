@@ -204,5 +204,11 @@ public class CPTAYahooFinancialsMessage extends CPTAYahooWebscrapeMessage
     protected int numberOfItems = 1;
     protected String range = null;
     protected String interval = null;*/
+
+    @Override
+    protected String getURL(String symbol)
+    {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
     
 }
