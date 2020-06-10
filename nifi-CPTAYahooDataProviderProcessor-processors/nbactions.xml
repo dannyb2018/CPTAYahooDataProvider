@@ -115,23 +115,6 @@
             </properties>
         </action>
         <action>
-            <actionName>debug.test.single</actionName>
-            <packagings>
-                <packaging>*</packaging>
-            </packagings>
-            <goals>
-                <goal>test-compile</goal>
-                <goal>surefire:test</goal>
-            </goals>
-            <properties>
-                <test>${packageClassName}</test>
-                <forkMode>once</forkMode>
-                <maven.surefire.debug>-agentlib:jdwp=transport=dt_socket,server=n,address=${jpda.address}</maven.surefire.debug>
-                <jpda.listen>true</jpda.listen>
-                <skipTests>true</skipTests>
-            </properties>
-        </action>
-        <action>
             <actionName>profile</actionName>
             <packagings>
                 <packaging>jar</packaging>
@@ -173,6 +156,19 @@
             </goals>
             <properties>
                 <skipTests>true</skipTests>
+            </properties>
+        </action>
+        <action>
+            <actionName>test.single</actionName>
+            <packagings>
+                <packaging>*</packaging>
+            </packagings>
+            <goals>
+                <goal>test-compile</goal>
+                <goal>surefire:test</goal>
+            </goals>
+            <properties>
+                <test>${packageClassName}</test>
             </properties>
         </action>
     </actions>
