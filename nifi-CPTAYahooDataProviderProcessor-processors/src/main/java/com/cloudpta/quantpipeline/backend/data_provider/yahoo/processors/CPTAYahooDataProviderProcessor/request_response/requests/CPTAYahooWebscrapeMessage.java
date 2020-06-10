@@ -44,9 +44,9 @@ import org.apache.nifi.processor.ProcessContext;
 public abstract class CPTAYahooWebscrapeMessage extends CPTAYahooMessage
 {
     @Override
-    protected String getURL()
+    protected String getURL(String symbol)
     {
-        String urlHost = "https://finance.yahoo.com/quote/" + symbology.getID() + "/" + queryType + "?p=" + symbology.getID();
+        String urlHost = "https://finance.yahoo.com/quote/" + symbol + "/" + queryType + "?p=" + symbol;
         msgLogger.trace("url to query is " + urlHost);
         return urlHost;
 }
@@ -67,7 +67,7 @@ public abstract class CPTAYahooWebscrapeMessage extends CPTAYahooMessage
         
         msgLogger.trace("About to make request for data");
         Client client = javax.ws.rs.client.ClientBuilder.newClient();            
-        String url = getURL();
+        String url = getURL("");
         msgLogger.trace("url for requesting data " + url);
         WebTarget webTarget = client.target(url);
         Invocation.Builder builder = webTarget.request(MediaType.APPLICATION_JSON);
