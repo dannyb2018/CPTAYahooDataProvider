@@ -30,7 +30,7 @@ public interface CPTAYahooConstants
     public static final String INCOME_STATEMENT_MESSAGE_TYPE = "IS";
     public static final String BALANCE_SHEET_MESSAGE_TYPE = "BS";
     public static final String CASHFLOW_MESSAGE_TYPE = "CF";
-    public static final String OPTION_SERIES_MESSAGE_TYPE = "TS";
+    public static final String OPTION_SERIES_MESSAGE_TYPE = "OS";
 
     public static final String INCOME_STATEMENT_ANNUAL = "IncomeStatementHistory";
     public static final String INCOME_STATEMENT_QUARTERLY = "IncomeStatementHistoryQuarterly";
