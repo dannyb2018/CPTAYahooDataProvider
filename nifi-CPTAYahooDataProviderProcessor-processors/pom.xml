@@ -17,12 +17,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 -->
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-    <modelVersion>4.0.0</modelVersion>
-
-    <properties>
-        <maven.test.skip>${skipTests}</maven.test.skip>
-    </properties>
-    
+    <modelVersion>4.0.0</modelVersion>    
     <parent>
         <groupId>com.cloudpta.quantpipeline.backend.data_provider.yahoo</groupId>
         <artifactId>CPTAYahooDataProvider</artifactId>
@@ -36,28 +31,18 @@ limitations under the License.
         <dependency>
             <groupId>org.apache.nifi</groupId>
             <artifactId>nifi-api</artifactId>
-            <version>1.9.2</version>
+            <version>1.11.4</version>
             <type>jar</type>
         </dependency>
         <dependency>
             <groupId>org.apache.nifi</groupId>
             <artifactId>nifi-utils</artifactId>
-            <version>1.9.2</version>
+            <version>1.11.4</version>
         </dependency>
         <dependency>
             <groupId>org.apache.nifi</groupId>
             <artifactId>nifi-mock</artifactId>
-            <version>1.9.2</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-simple</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
+            <version>1.11.4</version>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -86,6 +71,11 @@ limitations under the License.
             <version>1.0-SNAPSHOT</version>
         </dependency>
         <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>1.7.25</version>
+        </dependency>
+        <dependency>
             <groupId>com.cloudpta</groupId>
             <artifactId>CPTADataProviderAPI</artifactId>
             <version>1.0-SNAPSHOT</version>
@@ -95,6 +85,22 @@ limitations under the License.
             <artifactId>javaee-api</artifactId>
             <version>7.0</version>
             <type>jar</type>
-        </dependency>
-    </dependencies>
+        </dependency>              
+    </dependencies>   
+    <build>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-surefire-plugin</artifactId>
+                    <version>2.22.1</version>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+    </build>    
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <maven.compiler.source>11</maven.compiler.source>
+        <maven.compiler.target>11</maven.compiler.target>
+    </properties>
 </project>
