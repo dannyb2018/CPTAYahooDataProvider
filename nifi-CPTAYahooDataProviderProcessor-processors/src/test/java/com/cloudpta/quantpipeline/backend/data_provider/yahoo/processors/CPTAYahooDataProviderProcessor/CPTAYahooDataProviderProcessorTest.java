@@ -19,29 +19,24 @@ limitations under the License.
 */
 package com.cloudpta.quantpipeline.backend.data_provider.yahoo.processors.CPTAYahooDataProviderProcessor;
 
-import com.cloudpta.quantpipeline.api.instrument.CPTAInstrumentConstants;
+import com.cloudpta.quantpipeline.api.instrument.symbology.CPTAInstrumentDatabaseConstants;
 import com.cloudpta.quantpipeline.backend.data_provider.processor.CPTADataProviderAPIConstants;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.util.List;
-import java.util.UUID;
 import javax.json.Json;
 import javax.json.JsonArrayBuilder;
 import javax.json.JsonObjectBuilder;
 import org.apache.nifi.util.MockFlowFile;
 import org.apache.nifi.util.TestRunner;
 import org.apache.nifi.util.TestRunners;
+import com.cloudpta.quantpipeline.backend.data_provider.yahoo.processors.CPTAYahooDataProviderProcessor.request_response.CPTAYahooConstants;
 import static org.junit.Assert.assertTrue;
 import org.junit.Test;
-import com.cloudpta.quantpipeline.backend.data_provider.yahoo.processors.CPTAYahooDataProviderProcessor.request_response.CPTAYahooConstants;
+
 
 public class CPTAYahooDataProviderProcessorTest 
 {
-    // These need to be changed first to run this test
-    static String DSS_USER_NAME = "CHANGE_THIS_TO_YOUR_DSS_USER_NAME";
-    static String DSS_PASSWORD = "CHANGE_THIS_TO_YOUR_DSS_PASSWORD";
-    static String DSWS_USER_NAME = "CHANGE_THIS_TO_YOUR_DSWS_USER_NAME";
-    static String DSWS_PASSWORD = "CHANGE_THIS_TO_YOUR_DSWS_PASSWORD";
     
     @Test
     public void testProcessorWithEmptyFlowFile() 
@@ -68,28 +63,28 @@ public class CPTAYahooDataProviderProcessorTest
         assertTrue(results.size() == 1);
         MockFlowFile result = results.get(0);
         String resultValue = new String(runner.getContentAsByteArray(result));
+        System.out.println(resultValue);
 
-        // Test attributes and content
-//        result.assertAttributeEquals(CPTADSSDataProviderProcessor.MATCH_ATTR, "nifi rocks");
-        result.assertContentEquals("nifi rocks");       
     }
 
     @Test
-    public void testProcessorWithWrongUserNamePassword() 
+    public void testProcessorEOD() 
     {        
         // Mock the input file
         // Add two instruments
         String ric1 = "2618.TW";
         String ric2 = "MSFT";
         String field1Name = CPTAYahooConstants.OPEN;
+        String field2Name = CPTAYahooConstants.TIMESTAMP;
+        String field3Name = CPTAYahooConstants.VOLUME;
         // Mock the input file
         // Build the instruments array
         JsonObjectBuilder instrument1 = Json.createObjectBuilder();
-        instrument1.add(CPTAInstrumentConstants.ID_FIELD_NAME, ric1);
-        instrument1.add(CPTAInstrumentConstants.ID_SOURCE_FIELD_NAME, CPTAInstrumentConstants.ID_SOURCE_TICKER);
+        instrument1.add(CPTAInstrumentDatabaseConstants.INSTRUMENT_ID_FIELD_NAME, ric1);
+        instrument1.add(CPTAInstrumentDatabaseConstants.INSTRUMENT_ID_SOURCE_FIELD_NAME, CPTAInstrumentDatabaseConstants.ID_SOURCE_TICKER);
         JsonObjectBuilder instrument2 = Json.createObjectBuilder();
-        instrument2.add(CPTAInstrumentConstants.ID_FIELD_NAME, ric2);
-        instrument2.add(CPTAInstrumentConstants.ID_SOURCE_FIELD_NAME, CPTAInstrumentConstants.ID_SOURCE_TICKER);
+        instrument2.add(CPTAInstrumentDatabaseConstants.INSTRUMENT_ID_FIELD_NAME, ric2);
+        instrument2.add(CPTAInstrumentDatabaseConstants.INSTRUMENT_ID_SOURCE_FIELD_NAME, CPTAInstrumentDatabaseConstants.ID_SOURCE_TICKER);
         JsonArrayBuilder instruments = Json.createArrayBuilder();
         instruments.add(instrument1);
         instruments.add(instrument2);
@@ -97,8 +92,16 @@ public class CPTAYahooDataProviderProcessorTest
         JsonObjectBuilder field1 = Json.createObjectBuilder();
         field1.add(CPTADataProviderAPIConstants.FIELD_NAME_FIELD_NAME, field1Name);
         field1.add(CPTADataProviderAPIConstants.MESSAGE_TYPE_FIELD_NAME, CPTAYahooConstants.EOD_MESSAGE_TYPE);
+        JsonObjectBuilder field2 = Json.createObjectBuilder();
+        field2.add(CPTADataProviderAPIConstants.FIELD_NAME_FIELD_NAME, field2Name);
+        field2.add(CPTADataProviderAPIConstants.MESSAGE_TYPE_FIELD_NAME, CPTAYahooConstants.EOD_MESSAGE_TYPE);
+        JsonObjectBuilder field3 = Json.createObjectBuilder();
+        field3.add(CPTADataProviderAPIConstants.FIELD_NAME_FIELD_NAME, field3Name);
+        field3.add(CPTADataProviderAPIConstants.MESSAGE_TYPE_FIELD_NAME, CPTAYahooConstants.EOD_MESSAGE_TYPE);
         JsonArrayBuilder fields = Json.createArrayBuilder();
         fields.add(field1);
+        fields.add(field2);
+        fields.add(field3);
         // Empty properties array
         JsonArrayBuilder emptyPropertiesArray = Json.createArrayBuilder();
         // Add to the request
@@ -128,44 +131,64 @@ public class CPTAYahooDataProviderProcessorTest
         assertTrue(results.size() == 1);
         MockFlowFile result = results.get(0);
         String resultValue = new String(runner.getContentAsByteArray(result));
+        System.out.println(resultValue);
 
         // Test attributes and content
 //        result.assertAttributeEquals(CPTADSSDataProviderProcessor.MATCH_ATTR, "nifi rocks");
-        result.assertContentEquals("nifi rocks");       
+  //      result.assertContentEquals("nifi rocks");       
     }
 
     @Test
-    public void testProcessorWithOneRequestForDSSFlowFile() 
+    public void testProcessorTimeseries() 
     { 
         // Mock the input file
         // Add two instruments
         String ric1 = "2618.TW";
         String ric2 = "MSFT";
         String field1Name = CPTAYahooConstants.OPEN;
+        String field2Name = CPTAYahooConstants.TIMESTAMP;
+        String field3Name = CPTAYahooConstants.VOLUME;
         // Mock the input file
         // Build the instruments array
         JsonObjectBuilder instrument1 = Json.createObjectBuilder();
-        instrument1.add(CPTAInstrumentConstants.ID_FIELD_NAME, ric1);
-        instrument1.add(CPTAInstrumentConstants.ID_SOURCE_FIELD_NAME, CPTAInstrumentConstants.ID_SOURCE_TICKER);
+        instrument1.add(CPTAInstrumentDatabaseConstants.INSTRUMENT_ID_FIELD_NAME, ric1);
+        instrument1.add(CPTAInstrumentDatabaseConstants.INSTRUMENT_ID_SOURCE_FIELD_NAME, CPTAInstrumentDatabaseConstants.ID_SOURCE_TICKER);
         JsonObjectBuilder instrument2 = Json.createObjectBuilder();
-        instrument2.add(CPTAInstrumentConstants.ID_FIELD_NAME, ric2);
-        instrument2.add(CPTAInstrumentConstants.ID_SOURCE_FIELD_NAME, CPTAInstrumentConstants.ID_SOURCE_TICKER);
+        instrument2.add(CPTAInstrumentDatabaseConstants.INSTRUMENT_ID_FIELD_NAME, ric2);
+        instrument2.add(CPTAInstrumentDatabaseConstants.INSTRUMENT_ID_SOURCE_FIELD_NAME, CPTAInstrumentDatabaseConstants.ID_SOURCE_TICKER);
         JsonArrayBuilder instruments = Json.createArrayBuilder();
         instruments.add(instrument1);
         instruments.add(instrument2);
         // Now add field
         JsonObjectBuilder field1 = Json.createObjectBuilder();
         field1.add(CPTADataProviderAPIConstants.FIELD_NAME_FIELD_NAME, field1Name);
-        field1.add(CPTADataProviderAPIConstants.MESSAGE_TYPE_FIELD_NAME, CPTAYahooConstants.EOD_MESSAGE_TYPE);
+        field1.add(CPTADataProviderAPIConstants.MESSAGE_TYPE_FIELD_NAME, CPTAYahooConstants.TIMESERIES_MESSAGE_TYPE);
+        JsonObjectBuilder field2 = Json.createObjectBuilder();
+        field2.add(CPTADataProviderAPIConstants.FIELD_NAME_FIELD_NAME, field2Name);
+        field2.add(CPTADataProviderAPIConstants.MESSAGE_TYPE_FIELD_NAME, CPTAYahooConstants.TIMESERIES_MESSAGE_TYPE);
+        JsonObjectBuilder field3 = Json.createObjectBuilder();
+        field3.add(CPTADataProviderAPIConstants.FIELD_NAME_FIELD_NAME, field3Name);
+        field3.add(CPTADataProviderAPIConstants.MESSAGE_TYPE_FIELD_NAME, CPTAYahooConstants.TIMESERIES_MESSAGE_TYPE);
         JsonArrayBuilder fields = Json.createArrayBuilder();
         fields.add(field1);
-        // Empty properties array
-        JsonArrayBuilder emptyPropertiesArray = Json.createArrayBuilder();
+        fields.add(field2);
+        fields.add(field3);
+        // Going to make it 3m and daily
+        JsonArrayBuilder propertiesArray = Json.createArrayBuilder();
+        // Properties are json object with name and value
+        JsonObjectBuilder startDate = Json.createObjectBuilder();
+        startDate.add(CPTADataProviderAPIConstants.PROPERTY_NAME_FIELD_NAME, CPTADataProviderAPIConstants.CPTA_START_DATE_PROPERTY);
+        startDate.add(CPTADataProviderAPIConstants.PROPERTY_VALUE_FIELD_NAME, "-3M");
+        propertiesArray.add(startDate);
+        JsonObjectBuilder frequency = Json.createObjectBuilder();
+        frequency.add(CPTADataProviderAPIConstants.PROPERTY_NAME_FIELD_NAME, CPTADataProviderAPIConstants.CPTA_FREQUENCY_PROPERTY);
+        frequency.add(CPTADataProviderAPIConstants.PROPERTY_VALUE_FIELD_NAME, "1D");
+        propertiesArray.add(frequency);
         // Add to the request
         JsonObjectBuilder request = Json.createObjectBuilder();
         request.add(CPTADataProviderAPIConstants.INSTRUMENTS_ARRAY_NAME, instruments);
         request.add(CPTADataProviderAPIConstants.FIELDS_ARRAY_NAME, fields);
-        request.add(CPTADataProviderAPIConstants.PROPERTIES_ARRAY_NAME, emptyPropertiesArray);
+        request.add(CPTADataProviderAPIConstants.PROPERTIES_ARRAY_NAME, propertiesArray);
         
         String requestString = request.build().toString();
         InputStream content = new ByteArrayInputStream(requestString.getBytes());
@@ -184,17 +207,18 @@ public class CPTAYahooDataProviderProcessorTest
 
         // If you need to read or do aditional tests on results you can access the content
         List<MockFlowFile> results = runner.getFlowFilesForRelationship(CPTADataProviderAPIConstants.RELATIONSHIP_NAME_SUCCESS);
-        assertTrue("1 match", results.size() == 1);
+        assertTrue( results.size() == 1);
         MockFlowFile result = results.get(0);
         String resultValue = new String(runner.getContentAsByteArray(result));
+        System.out.println(resultValue);
 
         // Test attributes and content
 //        result.assertAttributeEquals(CPTADSSDataProviderProcessor.MATCH_ATTR, "nifi rocks");
-        result.assertContentEquals("nifi rocks");       
+//        result.assertContentEquals("nifi rocks");       
     }
 
     @Test
-    public void testProcessorWithTwoRequestForDSSFlowFile() 
+    public void testProcessorEODTimeseries() 
     {
         // Mock the input file
         // Add two instruments
@@ -204,11 +228,11 @@ public class CPTAYahooDataProviderProcessorTest
         // Mock the input file
         // Build the instruments array
         JsonObjectBuilder instrument1 = Json.createObjectBuilder();
-        instrument1.add(CPTAInstrumentConstants.ID_FIELD_NAME, ric1);
-        instrument1.add(CPTAInstrumentConstants.ID_SOURCE_FIELD_NAME, CPTAInstrumentConstants.ID_SOURCE_TICKER);
+        instrument1.add(CPTAInstrumentDatabaseConstants.INSTRUMENT_ID_FIELD_NAME, ric1);
+        instrument1.add(CPTAInstrumentDatabaseConstants.INSTRUMENT_ID_SOURCE_FIELD_NAME, CPTAInstrumentDatabaseConstants.ID_SOURCE_TICKER);
         JsonObjectBuilder instrument2 = Json.createObjectBuilder();
-        instrument2.add(CPTAInstrumentConstants.ID_FIELD_NAME, ric2);
-        instrument2.add(CPTAInstrumentConstants.ID_SOURCE_FIELD_NAME, CPTAInstrumentConstants.ID_SOURCE_TICKER);
+        instrument2.add(CPTAInstrumentDatabaseConstants.INSTRUMENT_ID_FIELD_NAME, ric2);
+        instrument2.add(CPTAInstrumentDatabaseConstants.INSTRUMENT_ID_SOURCE_FIELD_NAME, CPTAInstrumentDatabaseConstants.ID_SOURCE_TICKER);
         JsonArrayBuilder instruments = Json.createArrayBuilder();
         instruments.add(instrument1);
         instruments.add(instrument2);
@@ -243,13 +267,13 @@ public class CPTAYahooDataProviderProcessorTest
 
         // If you need to read or do aditional tests on results you can access the content
         List<MockFlowFile> results = runner.getFlowFilesForRelationship(CPTADataProviderAPIConstants.RELATIONSHIP_NAME_SUCCESS);
-        assertTrue("1 match", results.size() == 1);
+        assertTrue(results.size() == 1);
         MockFlowFile result = results.get(0);
         String resultValue = new String(runner.getContentAsByteArray(result));
-
+        System.out.println(resultValue);
         // Test attributes and content
 //        result.assertAttributeEquals(CPTADSSDataProviderProcessor.MATCH_ATTR, "nifi rocks");
-        result.assertContentEquals("nifi rocks");       
+//        result.assertContentEquals("nifi rocks");       
     }
 
     @Test
@@ -275,7 +299,7 @@ public class CPTAYahooDataProviderProcessorTest
 
         // If you need to read or do aditional tests on results you can access the content
         List<MockFlowFile> results = runner.getFlowFilesForRelationship(CPTADataProviderAPIConstants.RELATIONSHIP_NAME_SUCCESS);
-        assertTrue("1 match", results.size() == 1);
+        assertTrue(results.size() == 1);
         MockFlowFile result = results.get(0);
         String resultValue = new String(runner.getContentAsByteArray(result));
 
