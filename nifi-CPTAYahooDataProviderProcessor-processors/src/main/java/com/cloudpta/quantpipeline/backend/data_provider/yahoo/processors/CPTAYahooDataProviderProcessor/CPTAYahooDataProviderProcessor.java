@@ -24,6 +24,7 @@ import com.cloudpta.quantpipeline.backend.data_provider.request_response.CPTADat
 import com.cloudpta.quantpipeline.backend.data_provider.yahoo.processors.CPTAYahooDataProviderProcessor.request_response.CPTAYahooConstants;
 import com.cloudpta.quantpipeline.backend.data_provider.yahoo.processors.CPTAYahooDataProviderProcessor.request_response.requests.CPTAYahooBalanceSheetMessage;
 import com.cloudpta.quantpipeline.backend.data_provider.yahoo.processors.CPTAYahooDataProviderProcessor.request_response.requests.CPTAYahooCashflowMessage;
+import com.cloudpta.quantpipeline.backend.data_provider.yahoo.processors.CPTAYahooDataProviderProcessor.request_response.requests.CPTAYahooEODMessage;
 import com.cloudpta.quantpipeline.backend.data_provider.yahoo.processors.CPTAYahooDataProviderProcessor.request_response.requests.CPTAYahooIncomeStatementMessage;
 import com.cloudpta.quantpipeline.backend.data_provider.yahoo.processors.CPTAYahooDataProviderProcessor.request_response.requests.CPTAYahooOptionSeriesMessage;
 import com.cloudpta.quantpipeline.backend.data_provider.yahoo.processors.CPTAYahooDataProviderProcessor.request_response.requests.CPTAYahooTimeSeriesMessage;
@@ -60,6 +61,9 @@ public class CPTAYahooDataProviderProcessor extends CPTADataProviderProcessor<CP
         // Set up the mapper
         typeToMessageClassMap = new HashMap<>();
         // Populate with types
+        // Time series
+        Class eodMessageClass = CPTAYahooEODMessage.class;
+        typeToMessageClassMap.put(CPTAYahooConstants.EOD_MESSAGE_TYPE, eodMessageClass);
         // Time series
         Class timeSeriesMessageClass = CPTAYahooTimeSeriesMessage.class;
         typeToMessageClassMap.put(CPTAYahooConstants.TIMESERIES_MESSAGE_TYPE, timeSeriesMessageClass);
