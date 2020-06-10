@@ -56,6 +56,10 @@ public abstract class CPTAYahooMessage extends CPTADataMessage
                              List<CPTADataProperty> properties
                              )  throws CPTAException
     {
+        this.fields.addAll(fields);
+        this.symbology = symbols.get(0);
+        
+        msgLogger = logger;
         msgLogger.trace("getting data");
         
         JsonArrayBuilder result = Json.createArrayBuilder();
@@ -166,6 +170,6 @@ public abstract class CPTAYahooMessage extends CPTADataMessage
     }
     
     protected CPTAInstrumentSymbology symbology;
-    protected HashSet<String> fields;
+    protected HashSet<String> fields = new HashSet<>();
     protected ComponentLog msgLogger;
 }
