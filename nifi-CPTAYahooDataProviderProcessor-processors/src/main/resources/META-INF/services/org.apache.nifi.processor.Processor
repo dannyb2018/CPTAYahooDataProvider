@@ -16,4 +16,4 @@
 #    See the License for the specific language governing permissions and
 #    limitations under the License.
 #
-com.cloudpta.quantpipeline.backend.data_provider.yahoo.processors.CPTAYahooDataProviderProcessor.CPTAYahooDataProviderProcessor
+com.cloudpta.quantpipeline.backend.data_provider.yahoo.processors.CPTAYahooDataProviderProcessor.GetYahooFinanceData
