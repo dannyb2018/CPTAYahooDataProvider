@@ -19,7 +19,7 @@ limitations under the License.
 */
 package com.cloudpta.quantpipeline.backend.data_provider.yahoo.processors.CPTAYahooDataProviderProcessor;
 
-import com.cloudpta.quantpipeline.backend.data_provider.processor.CPTADataProviderProcessor;
+import com.cloudpta.quantpipeline.backend.data_provider.processor.GetFinanceData;
 import com.cloudpta.quantpipeline.backend.data_provider.request_response.CPTADataRetriever;
 import com.cloudpta.quantpipeline.backend.data_provider.yahoo.processors.CPTAYahooDataProviderProcessor.request_response.CPTAYahooConstants;
 import com.cloudpta.quantpipeline.backend.data_provider.yahoo.processors.CPTAYahooDataProviderProcessor.request_response.requests.CPTAYahooBalanceSheetMessage;
@@ -45,7 +45,7 @@ import org.apache.nifi.components.PropertyDescriptor;
 @SeeAlso({})
 @ReadsAttributes({@ReadsAttribute(attribute="", description="")})
 @WritesAttributes({@WritesAttribute(attribute="", description="")})
-public class GetYahooFinanceData extends CPTADataProviderProcessor<CPTADataRetriever>
+public class GetYahooFinanceData extends GetFinanceData<CPTADataRetriever>
 {
     @Override
     public void addProperties(List<PropertyDescriptor> thisInstanceDescriptors)
