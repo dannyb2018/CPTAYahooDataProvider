@@ -46,10 +46,11 @@ import org.apache.nifi.processor.ProcessContext;
 public class CPTAYahooTimeSeriesMessage extends CPTAYahooMessage
 {
     @Override
-    public JsonArray getResult
+    public void getResult
                              (
                              ComponentLog logger,
-                             ProcessContext context,        
+                             ProcessContext context,     
+                             JsonArrayBuilder responses,
                              List<CPTAInstrumentSymbology> symbols, 
                              List<String> fields, 
                              List<CPTADataProperty> properties
@@ -58,7 +59,7 @@ public class CPTAYahooTimeSeriesMessage extends CPTAYahooMessage
         // Get the properties
         processProperties(properties);
         // now get get data
-        return super.getResult(logger, context, symbols, fields, properties);
+        super.getResult(logger, context, responses, symbols, fields, properties);
     }
                              
     @Override
@@ -75,7 +76,7 @@ public class CPTAYahooTimeSeriesMessage extends CPTAYahooMessage
     }
 
     @Override
-    protected JsonArray parseResult(JsonObject data) throws CPTAException
+    protected void parseResult(JsonObject data, JsonArrayBuilder responses) throws CPTAException
     {
         // URL is of form https://query1.finance.yahoo.com/v8/finance/chart/GOOG?range=5y&interval=1d&includePrePost=false
         // result is json array chart->result->first item in array->timestamp with has list of timestamps
@@ -100,8 +101,6 @@ public class CPTAYahooTimeSeriesMessage extends CPTAYahooMessage
                 "error":null}}        
         */
 
-        JsonArrayBuilder resultBuilder = Json.createArrayBuilder();
-                        
         // Drill down to meta
         JsonObject chart = data.getJsonObject("chart");
         JsonArray yahooResultArray = chart.getJsonArray("result");        
@@ -202,12 +201,8 @@ public class CPTAYahooTimeSeriesMessage extends CPTAYahooMessage
             }            
             
             // add to result
-            resultBuilder.add(datapointForThisTime);
+            responses.add(datapointForThisTime);
         }        
-
-        // Build the array and return it
-        JsonArray result = resultBuilder.build();
-        return result;
     }    
     
     protected String getDateFromYahooDate(long yahooDateTime, long offset)
