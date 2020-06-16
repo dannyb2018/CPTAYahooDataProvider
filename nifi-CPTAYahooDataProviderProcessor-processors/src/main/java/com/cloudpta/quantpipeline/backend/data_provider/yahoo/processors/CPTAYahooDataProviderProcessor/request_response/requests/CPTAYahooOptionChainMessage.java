@@ -23,6 +23,7 @@ import com.cloudpta.quantpipeline.backend.data_provider.yahoo.processors.CPTAYah
 import com.cloudpta.quantpipeline.backend.data_provider.yahoo.processors.CPTAYahooDataProviderProcessor.request_response.CPTAYahooMessage;
 import com.cloudpta.utilites.exceptions.CPTAException;
 import javax.json.JsonArray;
+import javax.json.JsonArrayBuilder;
 import javax.json.JsonObject;
 
 /**
@@ -37,16 +38,17 @@ public class CPTAYahooOptionChainMessage extends CPTAYahooMessage
         return CPTAYahooConstants.OPTION_SERIES_MESSAGE_TYPE;
     }
 
-    @Override
-    protected JsonArray parseResult(JsonObject data) throws CPTAException
-    {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
 
     @Override
     protected String getURL(String symbol)
     {
         String urlHost = "https://query2.finance.yahoo.com/v7/finance/options/"+ symbology.getID();        
         return urlHost;
+    }
+
+    @Override
+    protected void parseResult(JsonObject data, JsonArrayBuilder responses) throws CPTAException
+    {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }
