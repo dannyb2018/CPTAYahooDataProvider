@@ -27,6 +27,7 @@ import java.io.StringReader;
 import java.util.List;
 import javax.json.Json;
 import javax.json.JsonArray;
+import javax.json.JsonArrayBuilder;
 import javax.json.JsonObject;
 import javax.json.JsonReader;
 import javax.ws.rs.client.Client;
@@ -52,14 +53,15 @@ public abstract class CPTAYahooWebscrapeMessage extends CPTAYahooMessage
 }
 
     @Override
-    public JsonArray getResult
-                             (
-                             ComponentLog logger,
-                             ProcessContext context,        
-                             List<CPTAInstrumentSymbology> symbols, 
-                             List<String> fields, 
-                             List<CPTADataProperty> properties
-                             )  throws CPTAException
+    public void getResult
+                        (
+                        ComponentLog logger,
+                        ProcessContext context,   
+                        JsonArrayBuilder responses,
+                        List<CPTAInstrumentSymbology> symbols, 
+                        List<String> fields, 
+                        List<CPTADataProperty> properties
+                        )  throws CPTAException
     {
         msgLogger.trace("getting data");
         
@@ -94,8 +96,7 @@ public abstract class CPTAYahooWebscrapeMessage extends CPTAYahooMessage
         }
         
         // parse the response
-        JsonArray result = parseResult(dataAsJsonObject);
-        return result;
+        parseResult(dataAsJsonObject, responses);
     }
                              
 
