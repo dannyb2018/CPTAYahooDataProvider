@@ -21,6 +21,7 @@ package com.cloudpta.quantpipeline.backend.data_provider.yahoo.processors.CPTAYa
 
 import com.cloudpta.utilites.exceptions.CPTAException;
 import javax.json.JsonArray;
+import javax.json.JsonArrayBuilder;
 import javax.json.JsonObject;
 
 /**
@@ -29,13 +30,6 @@ import javax.json.JsonObject;
  */
 public class CPTAYahooFinancialsMessage extends CPTAYahooWebscrapeMessage
 {
-
-    @Override
-    protected JsonArray parseResult(JsonObject data) throws CPTAException
-    {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
     @Override
     public String getMessageType()
     {
@@ -207,6 +201,12 @@ public class CPTAYahooFinancialsMessage extends CPTAYahooWebscrapeMessage
 
     @Override
     protected String getURL(String symbol)
+    {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    protected void parseResult(JsonObject data, JsonArrayBuilder responses) throws CPTAException
     {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
