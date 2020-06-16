@@ -25,6 +25,7 @@ import com.cloudpta.quantpipeline.backend.data_provider.yahoo.processors.CPTAYah
 import com.cloudpta.utilites.exceptions.CPTAException;
 import java.util.List;
 import javax.json.JsonArray;
+import javax.json.JsonArrayBuilder;
 import javax.json.JsonObject;
 import org.apache.nifi.logging.ComponentLog;
 import org.apache.nifi.processor.ProcessContext;
@@ -42,20 +43,15 @@ public class CPTAYahooAnalysisMessage extends CPTAYahooMessage
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
-    @Override
-    protected JsonArray parseResult(JsonObject data) throws CPTAException
-    {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public JsonArray getResult(ComponentLog logger, ProcessContext context, List<CPTAInstrumentSymbology> symbols, List<String> fields, List<CPTADataProperty> properties) throws CPTAException
-    {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
 
     @Override
     protected String getURL(String symbol)
+    {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    protected void parseResult(JsonObject data, JsonArrayBuilder responses) throws CPTAException
     {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
