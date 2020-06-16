@@ -47,14 +47,15 @@ import org.apache.nifi.processor.ProcessContext;
 public abstract class CPTAYahooMessage extends CPTADataMessage
 {
     @Override
-    public JsonArray getResult
-                             (
-                             ComponentLog logger,
-                             ProcessContext context,        
-                             List<CPTAInstrumentSymbology> symbols, 
-                             List<String> fields, 
-                             List<CPTADataProperty> properties
-                             )  throws CPTAException
+    public void getResult
+                        (
+                        ComponentLog logger,
+                        ProcessContext context,     
+                        JsonArrayBuilder responses, 
+                        List<CPTAInstrumentSymbology> symbols, 
+                        List<String> fields, 
+                        List<CPTADataProperty> properties
+                        )  throws CPTAException
     {
         this.fields.addAll(fields);
         this.symbology = symbols.get(0);
@@ -96,15 +97,12 @@ public abstract class CPTAYahooMessage extends CPTADataMessage
             }
 
             // parse the response
-            JsonArray resultForThisInstrument = parseResult(dataAsJsonObject);
-            result.add(resultForThisInstrument);
+            parseResult(dataAsJsonObject, responses);
         }
-        
-        return result.build();
     }
                                        
     protected abstract String getURL(String symbol);
-    protected abstract JsonArray parseResult(JsonObject data) throws CPTAException;        
+    protected abstract void parseResult(JsonObject data, JsonArrayBuilder responses) throws CPTAException;        
             
     protected JsonObject getDataAsJsonObjectFromHTML(Response webpageTextAsResponseToParse)
     {
