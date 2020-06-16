@@ -78,10 +78,7 @@ public class CPTAYahooEODMessageTest
         JsonObject data = null;
         CPTAYahooEODMessage instance = new CPTAYahooEODMessage();
         JsonArray expResult = null;
-        JsonArray result = instance.parseResult(data);
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        instance.parseResult(data, null);
     }
 
     /**
