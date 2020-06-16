@@ -275,36 +275,5 @@ public class GetYahooFinanceDataTest
 //        result.assertAttributeEquals(CPTADSSDataProviderProcessor.MATCH_ATTR, "nifi rocks");
 //        result.assertContentEquals("nifi rocks");       
     }
-
-    @Test
-    public void testProcessorWithOneRequestForDSSAndOneForDSWSFlowFile() 
-    {
- 
-        // Mock the input file
-        // If it is empty then it needs to have
-        InputStream content = new ByteArrayInputStream("{\"hello\":\"nifi rocks\"}".getBytes());
-
-        // Generate a test runner to mock a processor in a flow
-        TestRunner runner = TestRunners.newTestRunner(new GetYahooFinanceData());
-
-
-        // Add the content to the runner
-        runner.enqueue(content);
-
-        // Run the enqueued content, it also takes an int = number of contents queued
-        runner.run(1);
-
-        // All results were processed with out failure
-        runner.assertQueueEmpty();
-
-        // If you need to read or do aditional tests on results you can access the content
-        List<MockFlowFile> results = runner.getFlowFilesForRelationship(CPTADataProviderAPIConstants.RELATIONSHIP_NAME_SUCCESS);
-        assertTrue(results.size() == 1);
-        MockFlowFile result = results.get(0);
-        String resultValue = new String(runner.getContentAsByteArray(result));
-
-        // Test attributes and content
-//        result.assertAttributeEquals(CPTADSSDataProviderProcessor.MATCH_ATTR, "nifi rocks");
-        result.assertContentEquals("nifi rocks");       
-    }    
+   
 }
