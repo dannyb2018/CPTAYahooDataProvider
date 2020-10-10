@@ -170,6 +170,11 @@ public class CPTAYahooTimeSeriesMessage extends CPTAYahooMessage
                     // Add to datapoint
                     datapointForThisTime.add(CPTAYahooConstants.CLOSE, value);
                 }
+                else
+                {
+                    // Add a null
+                    datapointForThisTime.add(CPTAYahooConstants.CLOSE, JsonValue.NULL);
+                }
             }
             
             // If we want open
@@ -180,6 +185,11 @@ public class CPTAYahooTimeSeriesMessage extends CPTAYahooMessage
                     String value = opens.getJsonNumber(i).bigDecimalValue().toString();
                     // Add to datapoint
                     datapointForThisTime.add(CPTAYahooConstants.OPEN, value);
+                }
+                else
+                {
+                    // Add a null
+                    datapointForThisTime.add(CPTAYahooConstants.OPEN, JsonValue.NULL);
                 }
             }
             
@@ -192,6 +202,11 @@ public class CPTAYahooTimeSeriesMessage extends CPTAYahooMessage
                     // Add to datapoint
                     datapointForThisTime.add(CPTAYahooConstants.HIGH, value);
                 }
+                else
+                {
+                    // Add a null
+                    datapointForThisTime.add(CPTAYahooConstants.HIGH, JsonValue.NULL);
+                }
             }
             
             // If we want low
@@ -203,6 +218,11 @@ public class CPTAYahooTimeSeriesMessage extends CPTAYahooMessage
                     // Add to datapoint
                     datapointForThisTime.add(CPTAYahooConstants.LOW, value);
                 }
+                else
+                {
+                    // Add a null
+                    datapointForThisTime.add(CPTAYahooConstants.LOW, JsonValue.NULL);
+                }
             }
             
             // If we want volume
@@ -213,6 +233,11 @@ public class CPTAYahooTimeSeriesMessage extends CPTAYahooMessage
                     String value = volumes.getJsonNumber(i).bigDecimalValue().toString();
                     // Add to datapoint
                     datapointForThisTime.add(CPTAYahooConstants.VOLUME, value);
+                }
+                else
+                {
+                    // Add a null
+                    datapointForThisTime.add(CPTAYahooConstants.VOLUME, JsonValue.NULL);
                 }
             }            
             
