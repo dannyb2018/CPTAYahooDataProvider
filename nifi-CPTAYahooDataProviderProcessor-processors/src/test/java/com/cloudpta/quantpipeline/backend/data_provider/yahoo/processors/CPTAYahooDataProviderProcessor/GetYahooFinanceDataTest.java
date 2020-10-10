@@ -31,6 +31,10 @@ import org.apache.nifi.util.MockFlowFile;
 import org.apache.nifi.util.TestRunner;
 import org.apache.nifi.util.TestRunners;
 import com.cloudpta.quantpipeline.backend.data_provider.yahoo.processors.CPTAYahooDataProviderProcessor.request_response.CPTAYahooConstants;
+import java.io.StringReader;
+import javax.json.JsonArray;
+import javax.json.JsonReader;
+import javax.json.stream.JsonParser;
 import static org.junit.Assert.assertTrue;
 import org.junit.Test;
 
@@ -132,6 +136,9 @@ public class GetYahooFinanceDataTest
         MockFlowFile result = results.get(0);
         String resultValue = new String(runner.getContentAsByteArray(result));
         System.out.println(resultValue);
+        JsonReader reader = Json.createReader(new StringReader(resultValue));
+        JsonArray resultArray = reader.readArray();
+        System.out.println(resultArray.size());
 
         // Test attributes and content
 //        result.assertAttributeEquals(CPTADSSDataProviderProcessor.MATCH_ATTR, "nifi rocks");
@@ -144,7 +151,7 @@ public class GetYahooFinanceDataTest
         // Mock the input file
         // Add two instruments
         String ric1 = "2618.TW";
-        String ric2 = "MSFT";
+        String ric2 = "020560.KS";
         String field1Name = CPTAYahooConstants.OPEN;
         String field2Name = CPTAYahooConstants.TIMESTAMP;
         String field3Name = CPTAYahooConstants.VOLUME;
@@ -178,7 +185,7 @@ public class GetYahooFinanceDataTest
         // Properties are json object with name and value
         JsonObjectBuilder startDate = Json.createObjectBuilder();
         startDate.add(CPTADataProviderAPIConstants.PROPERTY_NAME_FIELD_NAME, CPTADataProviderAPIConstants.CPTA_START_DATE_PROPERTY);
-        startDate.add(CPTADataProviderAPIConstants.PROPERTY_VALUE_FIELD_NAME, "-3M");
+        startDate.add(CPTADataProviderAPIConstants.PROPERTY_VALUE_FIELD_NAME, "-1Y");
         propertiesArray.add(startDate);
         JsonObjectBuilder frequency = Json.createObjectBuilder();
         frequency.add(CPTADataProviderAPIConstants.PROPERTY_NAME_FIELD_NAME, CPTADataProviderAPIConstants.CPTA_FREQUENCY_PROPERTY);
@@ -211,6 +218,10 @@ public class GetYahooFinanceDataTest
         MockFlowFile result = results.get(0);
         String resultValue = new String(runner.getContentAsByteArray(result));
         System.out.println(resultValue);
+        JsonReader reader = Json.createReader(new StringReader(resultValue));
+        JsonArray resultArray = reader.readArray();
+        System.out.println(resultArray.size());
+        
 
         // Test attributes and content
 //        result.assertAttributeEquals(CPTADSSDataProviderProcessor.MATCH_ATTR, "nifi rocks");
