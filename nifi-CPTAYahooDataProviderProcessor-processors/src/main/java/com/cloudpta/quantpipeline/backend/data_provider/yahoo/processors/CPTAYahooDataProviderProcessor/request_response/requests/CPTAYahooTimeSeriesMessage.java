@@ -36,6 +36,7 @@ import javax.json.JsonArray;
 import javax.json.JsonArrayBuilder;
 import javax.json.JsonObject;
 import javax.json.JsonObjectBuilder;
+import javax.json.JsonValue;
 import org.apache.nifi.logging.ComponentLog;
 import org.apache.nifi.processor.ProcessContext;
 
@@ -163,41 +164,56 @@ public class CPTAYahooTimeSeriesMessage extends CPTAYahooMessage
             // If we want close
             if( true == fields.contains(CPTAYahooConstants.CLOSE))
             {
-                String value = closes.getJsonNumber(i).bigDecimalValue().toString();
-                // Add to datapoint
-                datapointForThisTime.add(CPTAYahooConstants.CLOSE, value);
+                if(false == closes.isNull(i))
+                {
+                    String value = closes.getJsonNumber(i).bigDecimalValue().toString();
+                    // Add to datapoint
+                    datapointForThisTime.add(CPTAYahooConstants.CLOSE, value);
+                }
             }
             
             // If we want open
             if( true == fields.contains(CPTAYahooConstants.OPEN))
             {
-                String value = opens.getJsonNumber(i).bigDecimalValue().toString();
-                // Add to datapoint
-                datapointForThisTime.add(CPTAYahooConstants.OPEN, value);
+                if(false == opens.isNull(i))
+                {
+                    String value = opens.getJsonNumber(i).bigDecimalValue().toString();
+                    // Add to datapoint
+                    datapointForThisTime.add(CPTAYahooConstants.OPEN, value);
+                }
             }
             
             // If we want high
             if( true == fields.contains(CPTAYahooConstants.HIGH))
             {
-                String value = highs.getJsonNumber(i).bigDecimalValue().toString();
-                // Add to datapoint
-                datapointForThisTime.add(CPTAYahooConstants.HIGH, value);
+                if(false == highs.isNull(i))
+                {
+                    String value = highs.getJsonNumber(i).bigDecimalValue().toString();
+                    // Add to datapoint
+                    datapointForThisTime.add(CPTAYahooConstants.HIGH, value);
+                }
             }
             
             // If we want low
             if( true == fields.contains(CPTAYahooConstants.LOW))
             {
-                String value = lows.getJsonNumber(i).bigDecimalValue().toString();
-                // Add to datapoint
-                datapointForThisTime.add(CPTAYahooConstants.LOW, value);
+                if(false == lows.isNull(i))
+                {
+                    String value = lows.getJsonNumber(i).bigDecimalValue().toString();
+                    // Add to datapoint
+                    datapointForThisTime.add(CPTAYahooConstants.LOW, value);
+                }
             }
             
             // If we want volume
             if( true == fields.contains(CPTAYahooConstants.VOLUME))
             {
-                String value = volumes.getJsonNumber(i).bigDecimalValue().toString();
-                // Add to datapoint
-                datapointForThisTime.add(CPTAYahooConstants.VOLUME, value);
+                if(false == volumes.isNull(i))
+                {
+                    String value = volumes.getJsonNumber(i).bigDecimalValue().toString();
+                    // Add to datapoint
+                    datapointForThisTime.add(CPTAYahooConstants.VOLUME, value);
+                }
             }            
             
             // add to result
