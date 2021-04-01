@@ -24,18 +24,17 @@ import com.cloudpta.quantpipeline.backend.data_provider.request_response.CPTADat
 import com.cloudpta.quantpipeline.backend.data_provider.request_response.CPTADataProperty;
 import com.cloudpta.utilites.exceptions.CPTAException;
 import java.io.StringReader;
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import javax.json.Json;
 import javax.json.JsonArrayBuilder;
 import javax.json.JsonObject;
 import javax.json.JsonReader;
-import javax.ws.rs.client.Client;
-import javax.ws.rs.client.Invocation;
-import javax.ws.rs.client.WebTarget;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
+import jakarta.ws.rs.client.Client;
+import jakarta.ws.rs.client.Invocation;
+import jakarta.ws.rs.client.WebTarget;
+import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.Response;
 import org.apache.nifi.logging.ComponentLog;
 import org.apache.nifi.processor.ProcessContext;
 
@@ -68,7 +67,7 @@ public abstract class CPTAYahooMessage extends CPTADataMessage
             JsonObject dataAsJsonObject = null;
 
             msgLogger.trace("About to make request for data");
-            Client client = javax.ws.rs.client.ClientBuilder.newClient();            
+            Client client = jakarta.ws.rs.client.ClientBuilder.newClient();            
             String url = getURL(currentInstrument.getID());
             msgLogger.trace("url for requesting data " + url);
             WebTarget webTarget = client.target(url);
