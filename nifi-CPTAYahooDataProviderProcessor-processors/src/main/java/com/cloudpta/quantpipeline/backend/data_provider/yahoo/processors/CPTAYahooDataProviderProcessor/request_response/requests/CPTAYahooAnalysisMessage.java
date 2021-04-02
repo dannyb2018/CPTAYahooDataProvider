@@ -19,16 +19,10 @@ limitations under the License.
 */
 package com.cloudpta.quantpipeline.backend.data_provider.yahoo.processors.CPTAYahooDataProviderProcessor.request_response.requests;
 
-import com.cloudpta.quantpipeline.api.instrument.symbology.CPTAInstrumentSymbology;
-import com.cloudpta.quantpipeline.backend.data_provider.request_response.CPTADataProperty;
 import com.cloudpta.quantpipeline.backend.data_provider.yahoo.processors.CPTAYahooDataProviderProcessor.request_response.CPTAYahooMessage;
 import com.cloudpta.utilites.exceptions.CPTAException;
-import java.util.List;
-import javax.json.JsonArray;
-import javax.json.JsonArrayBuilder;
-import javax.json.JsonObject;
-import org.apache.nifi.logging.ComponentLog;
-import org.apache.nifi.processor.ProcessContext;
+import jakarta.json.JsonArrayBuilder;
+import jakarta.json.JsonObject;
 
 /**
  *
