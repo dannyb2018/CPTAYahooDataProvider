@@ -31,20 +31,21 @@ limitations under the License.
         <dependency>
             <groupId>org.apache.nifi</groupId>
             <artifactId>nifi-api</artifactId>
-            <version>1.11.4</version>
+            <version>1.13.1</version>
             <type>jar</type>
         </dependency>
         <dependency>
             <groupId>org.apache.nifi</groupId>
             <artifactId>nifi-utils</artifactId>
-            <version>1.11.4</version>
+            <version>1.13.1</version>
         </dependency>
         <dependency>
             <groupId>org.apache.nifi</groupId>
             <artifactId>nifi-mock</artifactId>
-            <version>1.11.4</version>
+            <version>1.13.1</version>
             <scope>test</scope>
         </dependency>
+
         <dependency>
             <groupId>com.cloudpta</groupId>
             <artifactId>CPTAInstrumentAPI</artifactId>
@@ -71,11 +72,22 @@ limitations under the License.
             <version>1.0-SNAPSHOT</version>
         </dependency>
         <dependency>
+            <groupId>jakarta.json</groupId>
+            <artifactId>jakarta.json-api</artifactId>
+            <version>2.0.0</version>
+        </dependency> 
+        <dependency>
+            <groupId>org.glassfish</groupId>
+            <artifactId>jakarta.json</artifactId>
+            <version>2.0.0</version>
+            <classifier>module</classifier>
+        </dependency>
+             
+        <dependency>
             <groupId>com.cloudpta</groupId>
             <artifactId>CPTADataProviderAPI</artifactId>
             <version>1.0-SNAPSHOT</version>
         </dependency>
-             
     </dependencies>   
     <build>
         <pluginManagement>
