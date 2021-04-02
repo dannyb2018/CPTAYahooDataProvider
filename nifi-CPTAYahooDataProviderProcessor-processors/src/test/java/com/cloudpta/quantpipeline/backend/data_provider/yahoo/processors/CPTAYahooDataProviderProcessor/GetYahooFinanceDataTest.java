@@ -24,17 +24,16 @@ import com.cloudpta.quantpipeline.backend.data_provider.processor.CPTADataProvid
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.util.List;
-import javax.json.Json;
-import javax.json.JsonArrayBuilder;
-import javax.json.JsonObjectBuilder;
 import org.apache.nifi.util.MockFlowFile;
 import org.apache.nifi.util.TestRunner;
 import org.apache.nifi.util.TestRunners;
 import com.cloudpta.quantpipeline.backend.data_provider.yahoo.processors.CPTAYahooDataProviderProcessor.request_response.CPTAYahooConstants;
+import jakarta.json.Json;
+import jakarta.json.JsonArray;
+import jakarta.json.JsonArrayBuilder;
+import jakarta.json.JsonObjectBuilder;
+import jakarta.json.JsonReader;
 import java.io.StringReader;
-import javax.json.JsonArray;
-import javax.json.JsonReader;
-import javax.json.stream.JsonParser;
 import static org.junit.Assert.assertTrue;
 import org.junit.Test;
 
