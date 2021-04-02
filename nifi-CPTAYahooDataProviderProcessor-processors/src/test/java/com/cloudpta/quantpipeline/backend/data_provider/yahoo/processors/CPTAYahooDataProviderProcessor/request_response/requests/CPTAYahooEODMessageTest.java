@@ -20,13 +20,9 @@ limitations under the License.
 package com.cloudpta.quantpipeline.backend.data_provider.yahoo.processors.CPTAYahooDataProviderProcessor.request_response.requests;
 
 import com.cloudpta.quantpipeline.backend.data_provider.request_response.CPTADataProperty;
+import jakarta.json.JsonArray;
+import jakarta.json.JsonObject;
 import java.util.List;
-import javax.json.JsonArray;
-import javax.json.JsonObject;
-import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
