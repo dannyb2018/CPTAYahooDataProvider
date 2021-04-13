@@ -137,11 +137,7 @@ public class GetYahooFinanceDataTest
         System.out.println(resultValue);
         JsonReader reader = Json.createReader(new StringReader(resultValue));
         JsonArray resultArray = reader.readArray();
-        System.out.println(resultArray.size());
-
-        // Test attributes and content
-//        result.assertAttributeEquals(CPTADSSDataProviderProcessor.MATCH_ATTR, "nifi rocks");
-  //      result.assertContentEquals("nifi rocks");       
+        System.out.println(resultArray.size());      
     }
 
     @Test
@@ -219,12 +215,7 @@ public class GetYahooFinanceDataTest
         System.out.println(resultValue);
         JsonReader reader = Json.createReader(new StringReader(resultValue));
         JsonArray resultArray = reader.readArray();
-        System.out.println(resultArray.size());
-        
-
-        // Test attributes and content
-//        result.assertAttributeEquals(CPTADSSDataProviderProcessor.MATCH_ATTR, "nifi rocks");
-//        result.assertContentEquals("nifi rocks");       
+        System.out.println(resultArray.size());    
     }
 
     @Test
@@ -280,10 +271,7 @@ public class GetYahooFinanceDataTest
         assertTrue(results.size() == 1);
         MockFlowFile result = results.get(0);
         String resultValue = new String(runner.getContentAsByteArray(result));
-        System.out.println(resultValue);
-        // Test attributes and content
-//        result.assertAttributeEquals(CPTADSSDataProviderProcessor.MATCH_ATTR, "nifi rocks");
-//        result.assertContentEquals("nifi rocks");       
+        System.out.println(resultValue);     
     }
    
 }
